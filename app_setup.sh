@@ -1,3 +1,10 @@
+#!/bin/sh
+function mySetup(){
+currentDir="$(dirname "$0")"
+echo $currentDir
+yum install git -y
+yum install wget -y
+
 adduser admin
 echo P@ssw0rd | passwd admin --srdin
 usermod -aG wheel admin
@@ -24,12 +31,24 @@ systemctl enable mongod && systemctl start mongod
 
 mkdir /home/todo-app/app
 chown todo-app /home/todo-app/app
-cd /home/todo-app/app/
-git clone https://github.com/timoguic/ACIT4640-todo-app.git .
-npm install
+#cd /home/todo-app/app/
+git clone https://github.com/timoguic/ACIT4640-todo-app.git /home/todo-app/app/
+npm install --prefix /home/todo-app/app/
 
 #TODO replace the config file
-cp /root/module03/testFor4640/files/database.js /home/todo-app/app/config/ -f
+echo $currentDir
+cd $currentDir
+cd "$(dirname "$0")"
+
+fileFolderPath=$(pwd)/files
+echo $fileFolderPath
+databasePath=${fileFolderPath}/database.js
+echo $databasePath
+nginxPath=${fileFolderPath}/nginx.conf
+todoappPath=${fileFolderPath}/todoapp.service
+
+
+cp $databasePath /home/todo-app/app/config/ -f
 cat /home/todo-app/app/config/database.js
 
 #node /home/todo-app/app/server.js
@@ -37,12 +56,14 @@ cat /home/todo-app/app/config/database.js
 yum install nginx -y
 systemctl enable nginx
 systemctl start nginx
-cp /root/module03/testFor4640/files/nginx.conf /etc/nginx/nginx.conf -f
-cp /root/module03/testFor4640/files/todoapp.service /lib/systemd/system -f
+
+cp $nginxPath /etc/nginx/nginx.conf -f
+cp $todoappPath /lib/systemd/system -f
 
 systemctl daemon-reload
 systemctl enable todoapp
 systemctl start todoapp
 
-
+}
+mySetup
 
