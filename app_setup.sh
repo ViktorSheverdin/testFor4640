@@ -24,13 +24,25 @@ systemctl enable mongod && systemctl start mongod
 
 mkdir /home/todo-app/app
 chown todo-app /home/todo-app/app
-cd /home/todo-app/app
+cd /home/todo-app/app/
 git clone https://github.com/timoguic/ACIT4640-todo-app.git .
 npm install
 
 #TODO replace the config file
-mv /home/admin/testing
+cp /root/module03/testFor4640/files/database.js /home/todo-app/app/config/ -f
+cat /home/todo-app/app/config/database.js
+
+#node /home/todo-app/app/server.js
+
 yum install nginx -y
+systemctl enable nginx
+systemctl start nginx
+cp /root/module03/testFor4640/files/nginx.conf /etc/nginx/nginx.conf -f
+cp /root/module03/testFor4640/files/todoapp.service /lib/systemd/system -f
+
+systemctl daemon-reload
+systemctl enable todoapp
+systemctl start todoapp
 
 
 
