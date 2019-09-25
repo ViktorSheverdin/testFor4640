@@ -52,7 +52,7 @@ cp $databasePath /home/todo-app/app/config/ -f
 cat /home/todo-app/app/config/database.js
 
 #node /home/todo-app/app/server.js
-
+chmod -R 755 /home/todo-app
 yum install nginx -y
 systemctl enable nginx
 systemctl start nginx
